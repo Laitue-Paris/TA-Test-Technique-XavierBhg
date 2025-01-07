@@ -1,0 +1,45 @@
+<div class="container bg-secondary">
+  <div class="p-3">
+    <div>
+      <h1 class="fs-4">
+        <%= @post.title %>
+      </h1>
+    </div>
+    <div>
+      <div>
+        <a href="<%= @post.url %>"><%= @post.url %></a> | <%= @post.post_type %> | by <%= @post.author %> | <%= @post.score %> vote(s) | X comment(s)
+      </div>
+    </div>
+  </div>
+  <div>
+    <% @comments.each do |comment| %>
+    <div class="emoji" data-controller="emoji">
+      <div class="card-comment mx-4 my-2" >
+        <div class="card-comment-infos">
+          <p><%= comment.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+          <p><%= comment.content %></p>
+          <p class="text-end">by <%= comment.user.username%> </p>
+        </div>
+      </div>
+      <div class="button bg-light px-2 py-1">
+        <% @comments.each do |comment| %>
+          <% comment.reacts do |react| %>
+            <%= react.emoji %>
+          <% end %>
+        <% end %>
+        1 2 3 
+        <button class="rounded px-2 py-1"  data-action="click->emoji#fire"></button>
+      </div>
+      <div class="mt-3" data-emoji-target="display">
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="px-4">
+    <%= simple_form_for [@post, @comment] do |f| %>
+      <%= f.input :content, input_html: { class: "w-50"} %>
+      <%= f.submit %>
+    <% end %>
+  </div>
+
+</div>

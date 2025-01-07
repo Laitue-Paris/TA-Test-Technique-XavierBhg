@@ -1,9 +1,28 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require "json"
+require "rest-client"
+
+response = RestClient.get "https://hacker-news.firebaseio.com/v0/topstories.json"
+repos = JSON.parse(response).first(30)
+
+puts "Nettoyons la DB"
+
+Post.destroy_all
+Comment.destroy_all
+React.destroy_all
+
+puts "Création des posts avec l'API Hacker News"
+
+repos.each do |repo|
+  url = RestClient.get "https://hacker-news.firebaseio.com/v0/item/#{repo}.json"
+  response = JSON.parse(url)
+  post = Post.new(
+    title: response["title"],
+    post_type: response["type"],
+    url: response["url"],
+    score: response["score"],
+    author: response["by"]
+  )
+  post.save!
+end
+
+puts "#{Post.count} posts créés"
