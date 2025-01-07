@@ -7,7 +7,7 @@
     </div>
     <div>
       <div>
-        <a href="<%= @post.url %>"><%= @post.url %></a> | <%= @post.post_type %> | by <%= @post.author %> | <%= @post.score %> vote(s) | X comment(s)
+        <a href="<%= @post.url %>"><%= @post.url %></a> | <%= @post.post_type %> | by <%= @post.author %> | <%= @post.score %> vote(s) | <%= @post.comments.count %> comment(s)
       </div>
     </div>
   </div>
